@@ -1,0 +1,194 @@
+Récapitulatif du cours de développement web
+
+Installations:
+
+-installer nodejs
+-installer rails par le rails installer
+-installer visual studio code
+
+ensuite ouvrir powershell et on peut commencer
+
+La ligne de commande
+
+Les instructions de ligne de commande sont celles de Linux. Cela dit, elles fonctionnent également dans le Powershell de Windows.
+
+les instructions les plus importantes à retenir:
+
+pwd : "print working directory"
+ls : donne la liste des fichiers et dossiers du dossier courant
+cd <nom-du-fichier> "change directory" permet de rentrer dans le fichier. Ex: cd Downloads
+cd .. permet de remonter d'un fichier
+mkdir <nom-du-fichier> "make directory" permet de créer un nouveau dossier
+
+Git
+
+Git permet de gérer les différentes versions de son travail, mais aussi de travailler en équipe.
+
+A retenir:
+
+Au début de chaque projet dans le répertoire:
+-git init 
+-agit add .
+-git commit -m "message"
+
+Pour revenir au dernier commit:
+
+-git reset --hard
+
+A propos des branches (très important quand on travaille à plusieurs):
+
+-git branch nous dit combien de branches existent et sur laquelle on est
+-git branch <nom de la branche> crée une branche
+-git checkout <nom de la branche ou master> permet de changer de branche
+-git merge <nom de la branche> depuis master permet d'intégrer les modifications de la branche dans la branche rincipale
+-git branch -d <nom de la branche> permet de supprimer une branche 
+
+Rails
+
+pour créer une application:
+
+rails new <name-of-app>
+cd <name-of-app>
+bundle install
+rails s
+
+pour créer un modèle
+
+Exemple: rails generate model User name adress phone age
+
+rake db:migrate
+
+NB: name adress etc sont des champs du modèle User
+NB2: User est toujours au singulier
+NB3: Si rien n'est précisé, les champs sont considérés comme string (texte - de 255 caractères)
+
+Si modification plus tard des champs: dans db -> migration file -> ajouter t.<type-de-donnée>   :<nom-du-champ> 
+Exemple : t.string :adresse
+
+pour créer un contrôleur
+
+rails generate controller Users index show new create edit update destroy
+
+puis dans le fichier contrôleur:
+
+pour index:
+
+-dans config/routes.rb: ajouter get 'users/index' (sous-entendu : => ‘users#index’)
+
+-dans le contrôleur: 
+
+def index
+@users = User.all
+end
+
+-dans la vue app/views/users/index.html.erb:
+
+<% @users.each do |u| %>
+<%= u.name %>
+...
+<% end %>
+
+pour show:
+
+-dans config/routes: get 'users/show/:id'
+
+-dans le contrôleur:
+
+def show
+@user = User.find(params[:id])
+end
+
+-dans la vue (app/views/users/show.html.erb):
+
+<%= @user.name %>
+.....
+
+pour new, create edit, update et destroy: 
+
+La solution la plus pratique à partir de maintenant est d'utiliser les scaffolds.
+
+Les scaffolds:
+
+'rails generate scaffold User name salary:integer date_of_birth:date' (suivi de rake db:migrate) va générer un échaffaudage,
+
+c'est-à-dire des contrôleur, vues et modèle tout faits.
+
+Il est habituel de générer des échaffaudages pour aller ensuite emprunter des morceaux de code préfabriqués pour les coller dans la vraie application.
+
+Cela est particulièrement vrai pour les formulaires. Ne vous en faites pas, c'est une manière naturelle de fonctionner dans Rails.
+
+A mentionner encore:
+
+Des modules tout faits permettent de gérer des fonctionnalités importantes:
+
+-devise gèrent les inscriptions et connexions.
+-cancancan gère les autorisations à l'intérieur de l'application (ex: administrateur, éditeur, journaliste, lecteur abonné, lecteur pas abonné).
+-bcrypt permet la sécurisation des mots de passe (les mots de passe ne sont stockés nulle part, donc pas de risque de se les faire voler).
+
+Pour l'HTML:
+
+ L'HTML est la partie facile. Il suffit de se souvenir qu'il y a des titres h1, h2, h3, des paragraphes p, et qu'on va à la ligne avec <br />.
+En plus on a <img src="url de l'image" /> et <a href="lien où on va si on clique dessus" >Clique ici ! </a>
+Ils sont tous block, c'est-à-dire de haut en bas, sauf img et a qui sont de droite à gauche.
+
+La page est structurée en grandes divisions qu'on appelle des div, 
+
+Ce qui est compliqué, c'est le CSS. La base du CSS, c'est le Box Model.
+
+Tous les éléments html sont dans des boîtes. Il y a le texte qui est entouré d'une bordure. L'extérieur de la bordure s'appelle la margin, l'intérieur le padding.
+
+On peut sélectionner des éléments html de trois manières, par le type d’élément, par une classe, ou par une id.
+
+Ex d'HTML: <h1 class=''introduction'' id=''presentation''>Mon premier Titre</h1>
+Ex de CSS : 
+
+h1 {
+    color: red;
+}
+
+.introduction {
+    background-color: green;
+}
+
+#presentation {
+    font-style: italic;
+}
+
+Pour Bootstrap
+
+Pour l'installer, aller sur le site de Bootstrap et choisir les liens CDN.
+
+Pour Rails, on colle le lien CSS dans le fichier app/views/layouts/application.html.erb au tout début du head.
+
+Toujours dans Rails, pour le JS, coller les trois liens à la fin du body, en-dessous de yield.
+
+On utilise surtout quatre éléments: navbar, footer, row et jumbotron.
+
+ex:
+
+Pour Navbar:
+<ul class="nav navbar-nav navbar-right">
+   <li><a href="#">Sign Up</a></li>
+   <li><a href="#">Sign In</a></li>
+   <li><a href="#">About</a></li>
+ </ul>
+
+Pour Jumbotron:
+ <div class="jumbotron">
+  <h1 class="display-4">Hello, world!</h1>
+  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+  <hr class="my-4">
+  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  </p>
+</div>
+
+
+Pour row:
+<div class="row">
+  <div class="col-md-8">.col-md-8</div>
+  <div class="col-md-4">.col-md-4</div>
+</div>
+
+
